@@ -75,6 +75,7 @@ public:
 	
 	char begin(uint8_t mode);
 	char begin(uint8_t mode, uint8_t x, uint8_t y);
+	void end();
 	
 	//accessor functions
 	unsigned char hres();
@@ -97,7 +98,8 @@ public:
 	void fill(uint8_t color);
 	void shift(uint8_t distance, uint8_t direction);
 	void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, char c);
-	void fill_line(uint8_t line, uint16_t x0, uint16_t x1, uint8_t c);
+	void draw_row(uint8_t line, uint16_t x0, uint16_t x1, uint8_t c);
+	void draw_column(uint8_t row, uint16_t y0, uint16_t y1, uint8_t c);
 	void draw_rect(uint8_t x0, uint8_t y0, uint8_t w, uint8_t h, char c, char fc = -1); 
 	void draw_circle(uint8_t x0, uint8_t y0, uint8_t radius, char c, char fc = -1);
 	void bitmap(uint8_t x, uint8_t y, const unsigned char * bmp, uint16_t i = 0, uint8_t width = 0, uint8_t lines = 0);
@@ -138,6 +140,16 @@ public:
 	void print(uint8_t, uint8_t, long, int = DEC);
 	void print(uint8_t, uint8_t, unsigned long, int = DEC);
 	void print(uint8_t, uint8_t, double, int = 2);
+	
+	void println(uint8_t, uint8_t, const char[]);
+    void println(uint8_t, uint8_t, char, int = BYTE);
+    void println(uint8_t, uint8_t, unsigned char, int = BYTE);
+    void println(uint8_t, uint8_t, int, int = DEC);
+    void println(uint8_t, uint8_t, unsigned int, int = DEC);
+    void println(uint8_t, uint8_t, long, int = DEC);
+    void println(uint8_t, uint8_t, unsigned long, int = DEC);
+    void println(uint8_t, uint8_t, double, int = 2);
+    void println(uint8_t, uint8_t);
 
     void println(const char[]);
     void println(char, int = BYTE);

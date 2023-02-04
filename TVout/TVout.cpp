@@ -180,7 +180,7 @@ void TVout::delay(unsigned int x) {
  *		The number of frames to delay for.
  */
 void TVout::delay_frame(unsigned int x) {
-	int stop_line = (int)(display.first_frame_start_render_line + (display.vres * (display.vscale_const + 1))) + 1;
+	int stop_line = (int)(display.start_render + (display.vres*(display.vscale_const+1)))+1;
 	while (x) {
 		while (display.scanLine != stop_line);
 		while (display.scanLine == stop_line);
@@ -238,10 +238,7 @@ void TVout::force_outstart(uint8_t time) {
  */
 void TVout::force_linestart(uint8_t line) {
 	delay_frame(1);
-	display.first_frame_start_render_line = line;
-	display.first_frame_end_render_line = display.first_frame_start_render_line + (display.vres * (display.vscale_const + 1));
-	display.second_frame_start_render_line = display.lines_frame + display.first_frame_start_render_line;
-	display.second_frame_end_render_line = display.lines_frame + display.first_frame_end_render_line;
+	display.start_render = line;
 }
 
 
@@ -682,7 +679,7 @@ void TVout::shift(uint8_t distance, uint8_t direction) {
 			src = display.screen + distance*display.hres;
 			end = display.screen + display.vres*display.hres;
 				
-			while (src <= end) {
+			while (src < end) {
 				*dst = *src;
 				*src = 0;
 				dst++;
@@ -690,7 +687,7 @@ void TVout::shift(uint8_t distance, uint8_t direction) {
 			}
 			break;
 		case DOWN:
-			dst = display.screen + display.vres*display.hres;
+			dst = display.screen + display.vres*display.hres - 1;
 			src = dst - distance*display.hres;
 			end = display.screen;
 				
