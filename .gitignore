@@ -1,0 +1,10 @@
+/.vscode
+/build
+*~
+*.orig
+*.rej
+*.o
+*.d
+*.a
+*.obj
+*.exe
