@@ -6,7 +6,7 @@ AS      = avr-as
 LD      = avr-ld
 MKDIR_P = mkdir -p
 
-CFLAGS?=-std=c11 -O3 -Wall -g -pedantic -MMD -mmchu=atmega2560
+CFLAGS?=-std=c11 -Os -Wall -g -pedantic -MMD -mmcu=atmega2560
 CXXFLAGS?=-std=c++14 -Os -Wall -g -pedantic -MMD -mmcu=atmega2560
 HWDEFS?=-D__AVR_ATmega2560__ -DF_CPU=16000000
 #LDFLAGS?=
