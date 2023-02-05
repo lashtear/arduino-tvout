@@ -56,7 +56,6 @@ $(PROJ)-%.tar.gz:
 $(TVOUTDEP): Makefile $(TVOUTOBJ)
 $(TVOUTFONTSDEP): Makefile $(TVOUTFONTSOBJ)
 
-SHELL=bash
 clean:
 	$(RM) -r "$(OUT)"
 
