@@ -27,11 +27,19 @@ TVOUTFONTSSRC=$(addprefix TVoutfonts/,$(TVOUTFONTS))
 TVOUTFONTSOBJ=$(addprefix $(OUT)/,$(TVOUTFONTS:.cpp=.o))
 TVOUTFONTSDEP=$(addprefix $(OUT)/,$(TVOUTFONTS:.cpp=.d))
 OBJS=$(TVOUTOBJ) $(TVOUTFONTSOBJ)
+LIBTARGETS=libtvout.a libtvoutfonts.a
+BLIBS=$(addprefix $(OUT)/,$(LIBTARGETS))
 
-all: $(OBJS)
+all: $(BLIBS)
 
 $(OUT):
 	$(MKDIR_P) $@
+
+$(OUT)/libtvout.a: $(TVOUTOBJ)
+	$(AR) rs $@ $^
+
+$(OUT)/libtvoutfonts.a: $(TVOUTFONTSOBJ)
+	$(AR) rs $@ $^
 
 $(OUT)/%.o: TVout/%.cpp | $(OUT)
 	$(CXX) -o $@ -c $< $(CXXFLAGS) $(INCS) $(HWDEFS)
