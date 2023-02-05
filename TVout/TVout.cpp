@@ -33,6 +33,7 @@
 */
 
 #include "TVout.h"
+static void inline sp(unsigned char x, unsigned char y, char c); 
 
 
 /* Call this to start video output with the default resolution.
@@ -180,7 +181,7 @@ void TVout::delay(unsigned int x) {
  *		The number of frames to delay for.
  */
 void TVout::delay_frame(unsigned int x) {
-	int stop_line = (int)(display.start_render + (display.vres*(display.vscale_const+1)))+1;
+	int stop_line = (int)(display.first_frame_start_render_line + (display.vres * (display.vscale_const + 1))) + 1;
 	while (x) {
 		while (display.scanLine != stop_line);
 		while (display.scanLine == stop_line);
@@ -238,7 +239,10 @@ void TVout::force_outstart(uint8_t time) {
  */
 void TVout::force_linestart(uint8_t line) {
 	delay_frame(1);
-	display.start_render = line;
+	display.first_frame_start_render_line = line;
+	display.first_frame_end_render_line = display.first_frame_start_render_line + (display.vres * (display.vscale_const + 1));
+	display.second_frame_start_render_line = display.lines_frame + display.first_frame_start_render_line;
+	display.second_frame_end_render_line = display.lines_frame + display.first_frame_end_render_line;
 }
 
 
@@ -632,7 +636,7 @@ void TVout::bitmap(uint8_t x, uint8_t y, const unsigned char * bmp,
 	for (uint8_t l = 0; l < lines; l++) {
 		si = (y + l)*display.hres + x/8;
 		if (width == 1)
-			temp = 0xff >> rshift + xtra;
+			temp = 0xff >> (rshift + xtra);
 		else
 			temp = 0;
 		save = screen[si];
@@ -646,9 +650,9 @@ void TVout::bitmap(uint8_t x, uint8_t y, const unsigned char * bmp,
 			screen[si++] |= temp >> rshift;
 		}
 		if (rshift + xtra < 8)
-			screen[si-1] |= (save & (0xff >> rshift + xtra));	//test me!!!
+			screen[si-1] |= (save & (0xff >> (rshift + xtra)));	//test me!!!
 		if (rshift + xtra - 8 > 0)
-			screen[si] &= (0xff >> rshift + xtra - 8);
+			screen[si] &= (0xff >> (rshift + xtra - 8));
 		screen[si] |= temp << lshift;
 	}
 } // end of bitmap
@@ -748,7 +752,7 @@ void TVout::shift(uint8_t distance, uint8_t direction) {
 
 /* Inline version of set_pixel that does not perform a bounds check
  * This function will be replaced by a macro.
-*/
+ */
 static void inline sp(uint8_t x, uint8_t y, char c) {
 	if (c==1)
 		display.screen[(x/8) + (y*display.hres)] |= 0x80 >> (x&7);
